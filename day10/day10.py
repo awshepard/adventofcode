@@ -29,7 +29,7 @@ def look_and_say(num):
         logging.debug("looking at "+curr_num)
         if curr_num != prev_num and i != 0:
             to_return += str(how_many) + str(prev_num)
-            how_many = 0
+            how_many = 1
         else:
             how_many += 1
         prev_num = curr_num
@@ -38,13 +38,23 @@ def look_and_say(num):
 
 
 def main():
-    open_file = "input"
-    if args.debug_file:
-        open_file = "debug_%s_%d" % (open_file, args.day)
-    print look_and_say("111221")
+    # open_file = "input"
+    # if args.debug_file:
+    #     open_file = "debug_%s_%d" % (open_file, args.day)
     # with open(open_file) as f:
     #     for line in f:
-    #         pass
+    #         print look_and_say(str(line))
+    answer = look_and_say("1113122113")
+    for i in range(0, 39):
+        answer = look_and_say(answer)
+    # print answer
+    print len(answer)
+
+    answer = look_and_say("1113122113")
+    for i in range(0, 49):
+        answer = look_and_say(answer)
+    # print answer
+    print len(answer)
 
 if __name__ == '__main__':
     main()
