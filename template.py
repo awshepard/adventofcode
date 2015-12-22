@@ -19,32 +19,14 @@ args = parser.parse_args()
 logging.basicConfig(level=logging.DEBUG if args.debug else logging.INFO)
 
 
-def look_and_say(num):
-    to_return = ""
-    curr_num = -1
-    prev_num = -1
-    how_many = 0
-    for i in range(0, len(num)):
-        curr_num = num[i]
-        logging.debug("looking at "+curr_num)
-        if curr_num != prev_num and i != 0:
-            to_return += str(how_many) + str(prev_num)
-            how_many = 0
-        else:
-            how_many += 1
-        prev_num = curr_num
-    to_return += str(how_many) + str(prev_num)
-    return to_return
-
-
 def main():
     open_file = "input"
     if args.debug_file:
         open_file = "debug_%s_%d" % (open_file, args.day)
-    print look_and_say("111221")
-    # with open(open_file) as f:
-    #     for line in f:
-    #         pass
+
+    with open(open_file) as f:
+        for line in f:
+            pass
 
 if __name__ == '__main__':
     main()

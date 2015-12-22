@@ -22,8 +22,12 @@ lights = [[False for _ in xrange(1000)]
           for _ in xrange(1000)
           ]
 
+lights_2 = [[0 for _ in xrange(1000)]
+            for _ in xrange(1000)
+            ]
 
-def change_lights(instruction, first_coords, second_coords):
+
+def change_lights(instruction, first_coords, second_coords, day=1):
     big_x, small_x, big_y, small_y = -1, -1, -1, -1
     if first_coords[1] >= second_coords[1]:
         big_y = int(first_coords[1])
@@ -48,19 +52,29 @@ def change_lights(instruction, first_coords, second_coords):
         logging.debug("running turn on")
         for row in range(small_y, big_y + 1):
             for col in range(small_x, big_x + 1):
-                lights[row][col] = True
+                if day == 1:
+                    lights[row][col] = True
+                else:
+                    lights_2[row][col] += 1
                 count_read += 1
     if instruction == 'turn off':
         logging.debug("running turnoff")
         for row in range(small_y, big_y + 1):
             for col in range(small_x, big_x + 1):
-                lights[row][col] = False
+                if day == 1:
+                    lights[row][col] = False
+                else:
+                    lights_2[row][col] -= 1 if lights_2[row][col] > 0 else 0
+                    lights_2[row][col] = max(0, lights_2[row][col])
                 count_read += 1
     if instruction == 'toggle':
         logging.debug("running toggle")
         for row in range(small_y, big_y + 1):
             for col in range(small_x, big_x + 1):
-                lights[row][col] = False if lights[row][col] else True
+                if day == 1:
+                    lights[row][col] = False if lights[row][col] else True
+                else:
+                    lights_2[row][col] += 2
                 count_read += 1
 
     if count_read != should_read:
@@ -72,6 +86,13 @@ def count_lights():
     total = 0
     for i in lights:
         total += i.count(True)
+    return total
+
+
+def total_brightness():
+    total = 0
+    for i in lights_2:
+        total += sum(i)
     return total
 
 
@@ -94,10 +115,11 @@ def main():
             # logging.debug(coordinate_list)
             # logging.debug(first_coords)
             # logging.debug(second_coords)
-            change_lights(instruction, first_coords, second_coords)
+            change_lights(instruction, first_coords, second_coords, args.day)
 
     lights = count_lights()
     print lights
+    print total_brightness()
     if args.debug_file:
         logging.debug("Expected: %s, got: %s, %s" % (
             args.expected, lights, "PASSED" if args.expected == lights else "FAILED"))
